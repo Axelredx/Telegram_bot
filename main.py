@@ -50,7 +50,6 @@ async def handle_error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {Update} caused error: {context.error}')
     
     
-    
 if __name__ == '__main__':
     print('Bot is running...')
     app = Application.builder().token(key.TOKEN).build()
