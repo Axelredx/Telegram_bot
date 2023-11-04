@@ -15,9 +15,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def handle_response(text: str) -> str:
     processed: str = text.lower()
     
-    if 'hello' in processed:
+    if 'hello' or 'hi' or 'sup' in processed:
         return 'Hi there!'
-    elif 'how are you?' in processed:
+    elif 'how are you?' or 'hyd' in processed:
         return 'Great! Hope you too!'
     elif 'time' in processed:
         now = datetime.now()
@@ -46,7 +46,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print('Bot:', response)
     await update.message.reply_text(response)
 
-#derror
+#error
 async def handle_error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {Update} caused error: {context.error}')
     
