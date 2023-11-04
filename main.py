@@ -1,15 +1,16 @@
 import const as key
+import image_engine as im_eng
 from datetime import datetime
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, Updater, CommandHandler, MessageHandler, filters, ContextTypes, CallbackContext
 
 #commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Hi! Axe at your service!')
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Im an Axe! I can do many things such as cut or think!')
-    
+    await update.message.reply_text('Im an Axe! I can do many things such as cut or search for images/video!')
+
 #responses
 def handle_response(text: str) -> str:
     processed: str = text.lower()
@@ -57,6 +58,8 @@ if __name__ == '__main__':
     #commands
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
+    app.add_handler(CommandHandler("search_image", im_eng.search_image_command))
+    app.add_handler(CommandHandler("help_image", im_eng.help_image_command))
     
     #messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
