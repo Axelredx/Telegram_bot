@@ -1,8 +1,12 @@
+import engine as eng
+import logging
 import const as key
-import image_engine as im_eng
 from datetime import datetime
 from telegram import Update
-from telegram.ext import Application, Updater, CommandHandler, MessageHandler, filters, ContextTypes, CallbackContext
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackContext
+import requests
+import telegram
+import openai
 
 #commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -15,9 +19,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def handle_response(text: str) -> str:
     processed: str = text.lower()
     
-    if 'hello' or 'hi' or 'sup' in processed:
+    if 'hello' in processed:
         return 'Hi there!'
-    elif 'how are you?' or 'hyd' in processed:
+    elif 'how are you?' in processed:
         return 'Great! Hope you too!'
     elif 'time' in processed:
         now = datetime.now()
@@ -50,23 +54,28 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {Update} caused error: {context.error}')
     
-    
-if __name__ == '__main__':
+
+def main():
     print('Bot is running...')
-    app = Application.builder().token(key.TOKEN).build()
+    app = Application.builder().token(key.TELEGRAM_TOKEN).build()
     
     #commands
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
-    app.add_handler(CommandHandler("search_image", im_eng.search_image_command))
-    app.add_handler(CommandHandler("help_image", im_eng.help_image_command))
+    app.add_handler(CommandHandler("search_image", eng.search_image_command))
+    app.add_handler(CommandHandler("help_image", eng.help_image_command))
+    app.add_handler(CommandHandler('search_youtube', eng.search_youtube_video))
     
     #messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
+    #app.add_handler(MessageHandler(filters.TEXT , eng.gpt_message)) need to pay for working api
     
     #errors
     app.add_error_handler(handle_error)
     
     #check for new messages
     #print('Polling for messages...')
-    app.run_polling(poll_interval=1)
+    app.run_polling(poll_interval=1)   #1sec interval 
+
+if __name__ == '__main__':
+    main()
